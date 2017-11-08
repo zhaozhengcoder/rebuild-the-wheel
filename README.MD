@@ -19,6 +19,8 @@ rebuild_myxxx    #这个表示自己重写的项目
 
 2. tinyhttp
 
+    tinyhttp是一个简单的web服务器，实现了web服务器的基本原理。代码全部使用C语言开发，阅读代码，可以了解web服务器的基本原理。
+
 3. cjson
 
 3. stl
