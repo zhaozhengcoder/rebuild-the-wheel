@@ -62,11 +62,14 @@ void accept_request(void *arg)
     char path[512];
     size_t i, j;
     struct stat st;
-    int cgi = 0;      /* becomes true if server decides this is a CGI
-                       * program */
+    int cgi = 0;      /* becomes true if server decides this is a CGI */
     char *query_string = NULL;
 
+    //获得请求的第一行，请求的第一行往往是 ： GET / HTTP/1.1
     numchars = get_line(client, buf, sizeof(buf));
+    printf("buf : %s",buf);
+
+    //分析请求
     i = 0; j = 0;
     while (!ISspace(buf[i]) && (i < sizeof(method) - 1))
     {
@@ -76,15 +79,18 @@ void accept_request(void *arg)
     j=i;
     method[i] = '\0';
 
+    //server 支持get 和post 两种方法，如果是其他的方法，就不支持了，返回状态码501，服务器不支持这个方法
     if (strcasecmp(method, "GET") && strcasecmp(method, "POST"))
     {
         unimplemented(client);
         return;
     }
 
+    //对于是post的请求，把cgi(common gateway interface)的flag 设为1，表示这个需要cgi来处理
     if (strcasecmp(method, "POST") == 0)
         cgi = 1;
 
+    //获得url
     i = 0;
     while (ISspace(buf[j]) && (j < numchars))
         j++;
@@ -94,7 +100,9 @@ void accept_request(void *arg)
         i++; j++;
     }
     url[i] = '\0';
+    printf("url is %s \n",url);
 
+    //如果是get方法，判断这个get请求，是否是带有参数的请求
     if (strcasecmp(method, "GET") == 0)
     {
         query_string = url;
@@ -108,10 +116,15 @@ void accept_request(void *arg)
         }
     }
 
-    sprintf(path, "htdocs%s", url);
+    //sprintf()函数：将格式化的数据写入字符串
+    sprintf(path, "htdocs%s", url);  //获取请求文件路径
+    printf("path is :%s \n",path);
+    //如果路径是一个目录，那么就给这个路径加上index.html ,表示默认的请求
     if (path[strlen(path) - 1] == '/')
         strcat(path, "index.html");
+    //根据路径找文件，并获取path文件信息保存到结构体st中，-1表示寻找失败
     if (stat(path, &st) == -1) {
+        //如果寻找失败
         while ((numchars > 0) && strcmp("\n", buf))  /* read & discard headers */
             numchars = get_line(client, buf, sizeof(buf));
         not_found(client);
@@ -124,12 +137,17 @@ void accept_request(void *arg)
                 (st.st_mode & S_IXGRP) ||
                 (st.st_mode & S_IXOTH)    )
             cgi = 1;
-        if (!cgi)
+        //如果cgi==0，表示仅是一个get请求，没有带参数
+        if (!cgi){
+            printf("\n to execute server_file \n");
             serve_file(client, path);
-        else
+        }
+        else{
+            //表示是post方法或者是带有参数的get方法
+            printf("\n to execute execute_cgi \n");
             execute_cgi(client, path, method, query_string);
+        }
     }
-
     close(client);
 }
 
@@ -210,6 +228,7 @@ void error_die(const char *sc)
 void execute_cgi(int client, const char *path,
         const char *method, const char *query_string)
 {
+    printf ("\n in function execute cgi ! \n");
     char buf[1024];
     int cgi_output[2];
     int cgi_input[2];
@@ -233,6 +252,7 @@ void execute_cgi(int client, const char *path,
             if (strcasecmp(buf, "Content-Length:") == 0)
                 content_length = atoi(&(buf[16]));
             numchars = get_line(client, buf, sizeof(buf));
+            printf("buf : %s",buf);
         }
         if (content_length == -1) {
             bad_request(client);
@@ -279,6 +299,7 @@ void execute_cgi(int client, const char *path,
             sprintf(length_env, "CONTENT_LENGTH=%d", content_length);
             putenv(length_env);
         }
+        printf("\npath :  %s",path);
         execl(path, NULL);
         exit(0);
     } else {    /* parent */
@@ -287,6 +308,7 @@ void execute_cgi(int client, const char *path,
         if (strcasecmp(method, "POST") == 0)
             for (i = 0; i < content_length; i++) {
                 recv(client, &c, 1, 0);
+                printf("c: %c \n",c);
                 write(cgi_input[1], &c, 1);
             }
         while (read(cgi_output[0], &c, 1) > 0)
@@ -489,7 +511,7 @@ void unimplemented(int client)
 int main(void)
 {
     int server_sock = -1;
-    u_short port = 4001;
+    u_short port = 4000;
     int client_sock = -1;
     struct sockaddr_in client_name;
     socklen_t  client_name_len = sizeof(client_name);
