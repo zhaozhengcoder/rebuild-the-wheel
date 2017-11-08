@@ -36,6 +36,7 @@ void unimplemented(int);
 
 
 //对于一个http请求的处理的流程，核心代码
+//注意：client是一个文件剧本，在accept_request函数里面，只读了第一行
 void accept_request(void *arg)
 {
     int client = (intptr_t)arg;
@@ -194,6 +195,7 @@ void error_die(const char *sc)
 //具体一点的谈：
 //比如一个 get请求 /index?uid=100,它可能对应的场景是返回id=100用户的页面，这显然不是一个静态的页面，需要动态的生成，然后服务器把这个id=100的参数拿到，去执行本地的一个 xxx.cgi 文件，
 //执行这个文件的时候，参数是id=100，然后将执行这个文件的输出返回给浏览器  可以参考 ： http://www.runoob.com/python/python-cgi.html
+//注意：client是一个文件剧本，在accept_request函数里面，只读了第一行，在execute_cgi函数里面，把剩下的读完
 void execute_cgi(int client, const char *path,const char *method, const char *query_string)
 {
     printf ("\n in function execute cgi ! \n");
@@ -269,7 +271,8 @@ void execute_cgi(int client, const char *path,const char *method, const char *qu
             putenv(length_env);
         }
         printf("\npath :  %s",path);
-        execl(path, NULL);
+        //执行外部脚本
+        execl(path,path, NULL);
         exit(0);
     } else {    /*父进程 */
         close(cgi_output[1]);
