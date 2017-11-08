@@ -1,17 +1,4 @@
-/* J. David's webserver */
-/* This is a simple webserver.
- * Created November 1999 by J. David Blackstone.
- * CSE 4344 (Network concepts), Prof. Zeigler
- * University of Texas at Arlington
- */
-/* This program compiles for Sparc Solaris 2.6.
- * To compile for Linux:
- *  1) Comment out the #include <pthread.h> line.
- *  2) Comment out the line that defines the variable newthread.
- *  3) Comment out the two lines that run pthread_create().
- *  4) Uncomment the line that runs accept_request().
- *  5) Remove -lsocket from the Makefile.
- */
+
 #include <stdio.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -47,11 +34,8 @@ void serve_file(int, const char *);
 int startup(u_short *);
 void unimplemented(int);
 
-/**********************************************************************/
-/* A request has caused a call to accept() on the server port to
- * return.  Process the request appropriately.
- * Parameters: the socket connected to the client */
-/**********************************************************************/
+
+//对于一个http请求的处理的流程，核心代码
 void accept_request(void *arg)
 {
     int client = (intptr_t)arg;
@@ -69,7 +53,7 @@ void accept_request(void *arg)
     numchars = get_line(client, buf, sizeof(buf));
     printf("buf : %s",buf);
 
-    //分析请求
+    //分析请求 
     i = 0; j = 0;
     while (!ISspace(buf[i]) && (i < sizeof(method) - 1))
     {
@@ -90,7 +74,7 @@ void accept_request(void *arg)
     if (strcasecmp(method, "POST") == 0)
         cgi = 1;
 
-    //获得url
+    //获得请求的url
     i = 0;
     while (ISspace(buf[j]) && (j < numchars))
         j++;
@@ -100,7 +84,7 @@ void accept_request(void *arg)
         i++; j++;
     }
     url[i] = '\0';
-    printf("url is %s \n",url);
+    printf("url is %s \n",url);  //比如说，这个请求的url可能是  /index.html ，或则是 /index.html?id=100
 
     //如果是get方法，判断这个get请求，是否是带有参数的请求
     if (strcasecmp(method, "GET") == 0)
@@ -151,10 +135,7 @@ void accept_request(void *arg)
     close(client);
 }
 
-/**********************************************************************/
-/* Inform the client that a request it has made has a problem.
- * Parameters: client socket */
-/**********************************************************************/
+
 void bad_request(int client)
 {
     char buf[1024];
@@ -171,13 +152,7 @@ void bad_request(int client)
     send(client, buf, sizeof(buf), 0);
 }
 
-/**********************************************************************/
-/* Put the entire contents of a file out on a socket.  This function
- * is named after the UNIX "cat" command, because it might have been
- * easier just to do something like pipe, fork, and exec("cat").
- * Parameters: the client socket descriptor
- *             FILE pointer for the file to cat */
-/**********************************************************************/
+
 void cat(int client, FILE *resource)
 {
     char buf[1024];
@@ -190,10 +165,7 @@ void cat(int client, FILE *resource)
     }
 }
 
-/**********************************************************************/
-/* Inform the client that a CGI script could not be executed.
- * Parameter: the client socket descriptor. */
-/**********************************************************************/
+
 void cannot_execute(int client)
 {
     char buf[1024];
@@ -208,25 +180,21 @@ void cannot_execute(int client)
     send(client, buf, strlen(buf), 0);
 }
 
-/**********************************************************************/
-/* Print out an error message with perror() (for system errors; based
- * on value of errno, which indicates system call errors) and exit the
- * program indicating an error. */
-/**********************************************************************/
+
 void error_die(const char *sc)
 {
     perror(sc);
     exit(1);
 }
 
-/**********************************************************************/
-/* Execute a CGI script.  Will need to set environment variables as
- * appropriate.
- * Parameters: client socket descriptor
- *             path to the CGI script */
-/**********************************************************************/
-void execute_cgi(int client, const char *path,
-        const char *method, const char *query_string)
+
+//对于带有参数的get请求和 post请求，这两类并不能直接返回一个静态的html文件，需要cgi
+//cgi是common gateway interface的简称
+//谈一下我对cgi的理解，就是对于不能直接返回静态页面的请求，这些请求一定是需要在服务器上面运行一段代码，然后返回一个结果
+//具体一点的谈：
+//比如一个 get请求 /index?uid=100,它可能对应的场景是返回id=100用户的页面，这显然不是一个静态的页面，需要动态的生成，然后服务器把这个id=100的参数拿到，去执行本地的一个 xxx.cgi 文件，
+//执行这个文件的时候，参数是id=100，然后将执行这个文件的输出返回给浏览器  可以参考 ： http://www.runoob.com/python/python-cgi.html
+void execute_cgi(int client, const char *path,const char *method, const char *query_string)
 {
     printf ("\n in function execute cgi ! \n");
     char buf[1024];
@@ -293,6 +261,7 @@ void execute_cgi(int client, const char *path,
         putenv(meth_env);
         if (strcasecmp(method, "GET") == 0) {
             sprintf(query_env, "QUERY_STRING=%s", query_string);
+            printf("qery_env : %s  ",query_env);
             putenv(query_env);
         }
         else {   /* POST */
@@ -302,13 +271,16 @@ void execute_cgi(int client, const char *path,
         printf("\npath :  %s",path);
         execl(path, NULL);
         exit(0);
-    } else {    /* parent */
+    } else {    /*父进程 */
         close(cgi_output[1]);
         close(cgi_input[0]);
+        //注意：这段代码的意识是，如果请求是post类型，post的请求是在正文里面有post的具体数据的 
         if (strcasecmp(method, "POST") == 0)
             for (i = 0; i < content_length; i++) {
+                //在这里读的就是post请求的具体参数，父子进程共享文件句柄，然后这个socet的header部分已经读完了，在往下读，就是post的正文了
                 recv(client, &c, 1, 0);
                 printf("c: %c \n",c);
+                //将读到的数据写给子进程
                 write(cgi_input[1], &c, 1);
             }
         while (read(cgi_output[0], &c, 1) > 0)
@@ -320,19 +292,7 @@ void execute_cgi(int client, const char *path,
     }
 }
 
-/**********************************************************************/
-/* Get a line from a socket, whether the line ends in a newline,
- * carriage return, or a CRLF combination.  Terminates the string read
- * with a null character.  If no newline indicator is found before the
- * end of the buffer, the string is terminated with a null.  If any of
- * the above three line terminators is read, the last character of the
- * string will be a linefeed and the string will be terminated with a
- * null character.
- * Parameters: the socket descriptor
- *             the buffer to save the data in
- *             the size of the buffer
- * Returns: the number of bytes stored (excluding null) */
-/**********************************************************************/
+
 int get_line(int sock, char *buf, int size)
 {
     int i = 0;
@@ -365,11 +325,7 @@ int get_line(int sock, char *buf, int size)
     return(i);
 }
 
-/**********************************************************************/
-/* Return the informational HTTP headers about a file. */
-/* Parameters: the socket to print the headers on
- *             the name of the file */
-/**********************************************************************/
+
 void headers(int client, const char *filename)
 {
     char buf[1024];
@@ -385,9 +341,7 @@ void headers(int client, const char *filename)
     send(client, buf, strlen(buf), 0);
 }
 
-/**********************************************************************/
-/* Give a client a 404 not found status message. */
-/**********************************************************************/
+
 void not_found(int client)
 {
     char buf[1024];
@@ -412,13 +366,7 @@ void not_found(int client)
     send(client, buf, strlen(buf), 0);
 }
 
-/**********************************************************************/
-/* Send a regular file to the client.  Use headers, and report
- * errors to client if they occur.
- * Parameters: a pointer to a file structure produced from the socket
- *              file descriptor
- *             the name of the file to serve */
-/**********************************************************************/
+
 void serve_file(int client, const char *filename)
 {
     FILE *resource = NULL;
@@ -440,14 +388,8 @@ void serve_file(int client, const char *filename)
     fclose(resource);
 }
 
-/**********************************************************************/
-/* This function starts the process of listening for web connections
- * on a specified port.  If the port is 0, then dynamically allocate a
- * port and modify the original port variable to reflect the actual
- * port.
- * Parameters: pointer to variable containing the port to connect on
- * Returns: the socket */
-/**********************************************************************/
+
+//完成server的socket 的初始化，绑定监听的地址端口，然后返回，等待客户socket的connect
 int startup(u_short *port)
 {
     int httpd = 0;
@@ -479,11 +421,7 @@ int startup(u_short *port)
     return(httpd);
 }
 
-/**********************************************************************/
-/* Inform the client that the requested web method has not been
- * implemented.
- * Parameter: the client socket */
-/**********************************************************************/
+
 void unimplemented(int client)
 {
     char buf[1024];
@@ -506,11 +444,12 @@ void unimplemented(int client)
     send(client, buf, strlen(buf), 0);
 }
 
-/**********************************************************************/
+
 
 int main(void)
 {
     int server_sock = -1;
+    //监听的端口
     u_short port = 4000;
     int client_sock = -1;
     struct sockaddr_in client_name;
@@ -519,20 +458,16 @@ int main(void)
 
     server_sock = startup(&port);
     printf("httpd running on port %d\n", port);
-
     while (1)
     {
-        client_sock = accept(server_sock,
-                (struct sockaddr *)&client_name,
-                &client_name_len);
+        //等待socket建立连接
+        client_sock = accept(server_sock,(struct sockaddr *)&client_name,&client_name_len);
         if (client_sock == -1)
             error_die("accept");
-        /* accept_request(&client_sock); */
+        //对于一个socket连接(即一个http请求)，创建一个线程去处理
         if (pthread_create(&newthread , NULL, (void *)accept_request, (void *)(intptr_t)client_sock) != 0)
             perror("pthread_create");
     }
-
     close(server_sock);
-
     return(0);
 }
