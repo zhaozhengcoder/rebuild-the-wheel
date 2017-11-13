@@ -191,6 +191,7 @@ static unsigned parse_hex4(const char *str)
 static const unsigned char firstByteMark[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
 static const char *parse_string(cJSON *item,const char *str)
 {
+	printf("in function parse_string \nargument str : is  %s \n",str);
 	const char *ptr=str+1;char *ptr2;char *out;int len=0;unsigned uc,uc2;
 	if (*str!='\"') {ep=str;return 0;}	/* not a string! */
 	
@@ -245,6 +246,8 @@ static const char *parse_string(cJSON *item,const char *str)
 	if (*ptr=='\"') ptr++;
 	item->valuestring=out;
 	item->type=cJSON_String;
+	printf("function parse_string  item->valuestring  :  %s \n",out);
+	printf("function parse_string  ptr  :  %s \n",ptr);
 	return ptr;
 }
 
@@ -316,27 +319,34 @@ static char *print_array(cJSON *item,int depth,int fmt,printbuffer *p);
 static const char *parse_object(cJSON *item,const char *value);
 static char *print_object(cJSON *item,int depth,int fmt,printbuffer *p);
 
-/* Utility to jump whitespace and cr/lf */
-static const char *skip(const char *in) {while (in && *in && (unsigned char)*in<=32) in++; return in;}
+/* 去掉字符串最前面的空格　换行　制表符等等 */
+static const char *skip(const char *in) {
+	while (in && *in && (unsigned char)*in<=32) 
+	{in++;} 
+	return in;
+}
 
 /* Parse an object - create a new root, and populate. */
 cJSON *cJSON_ParseWithOpts(const char *value,const char **return_parse_end,int require_null_terminated)
 {
+	printf("in function cJSON_ParseWithOpts \n");
 	const char *end=0;
 	cJSON *c=cJSON_New_Item();
 	ep=0;
 	if (!c) return 0;       /* memory fail */
 
 	end=parse_value(c,skip(value));
+	printf("in function cJSON_ParseWithOpts end is %s  \n",end);
 	if (!end)	{cJSON_Delete(c);return 0;}	/* parse failure. ep is set. */
 
 	/* if we require null-terminated JSON without appended garbage, skip and then check for a null terminator */
 	if (require_null_terminated) {end=skip(end);if (*end) {cJSON_Delete(c);ep=end;return 0;}}
 	if (return_parse_end) *return_parse_end=end;
+	printf("in function cJSON_ParseWithOpts end !!!\n");
 	return c;
 }
 /* Default options for cJSON_Parse */
-cJSON *cJSON_Parse(const char *value) {return cJSON_ParseWithOpts(value,0,0);}
+cJSON *cJSON_Parse(const char *value) { printf("in function cjson_parse \n"); return cJSON_ParseWithOpts(value,0,0);}
 
 /* Render a cJSON item/entity/structure to text. */
 char *cJSON_Print(cJSON *item)				{return print_value(item,0,1,0);}
@@ -356,20 +366,34 @@ char *cJSON_PrintBuffered(cJSON *item,int prebuffer,int fmt)
 /* Parser core - when encountering text, process appropriately. */
 static const char *parse_value(cJSON *item,const char *value)
 {
+	printf("\nbegin : in function : parser_value  \n");
 	if (!value)						return 0;	/* Fail on null. */
 	if (!strncmp(value,"null",4))	{ item->type=cJSON_NULL;  return value+4; }
 	if (!strncmp(value,"false",5))	{ item->type=cJSON_False; return value+5; }
 	if (!strncmp(value,"true",4))	{ item->type=cJSON_True; item->valueint=1;	return value+4; }
-	if (*value=='\"')				{ return parse_string(item,value); }
-	if (*value=='-' || (*value>='0' && *value<='9'))	{ return parse_number(item,value); }
-	if (*value=='[')				{ return parse_array(item,value); }
-	if (*value=='{')				{ return parse_object(item,value); }
-
-	ep=value;return 0;	/* failure. */
+	if (*value=='\"'){ 
+		printf("is string \n");
+		return parse_string(item,value); 
+	}
+	if (*value=='-' || (*value>='0' && *value<='9')){ 
+		printf("is number \n");
+		return parse_number(item,value); 
+	}
+	if (*value=='['){ 
+		printf("is array \n");
+		return parse_array(item,value); 
+	}
+	if (*value=='{'){ 
+		printf("is object \n");
+		return parse_object(item,value); 
+	}
+	ep=value;
+	printf("end : in function : parser_value  ~~~~~~~~~~~~~~~~~~~~~~ \n");
+	return 0;	/* failure. */
 }
 
 /* Render a value to text. */
-static char *print_value(cJSON *item,int depth,int fmt,printbuffer *p)
+static char * print_value(cJSON *item,int depth,int fmt,printbuffer *p)
 {
 	char *out=0;
 	if (!item) return 0;
@@ -513,30 +537,40 @@ static char *print_array(cJSON *item,int depth,int fmt,printbuffer *p)
 /* Build an object from the text. */
 static const char *parse_object(cJSON *item,const char *value)
 {
+	printf("********* parse_object \n");
 	cJSON *child;
 	if (*value!='{')	{ep=value;return 0;}	/* not an object! */
 	
 	item->type=cJSON_Object;
 	value=skip(value+1);
 	if (*value=='}') return value+1;	/* empty array. */
-	
+	//给item 创建一个子节点child
 	item->child=child=cJSON_New_Item();
 	if (!item->child) return 0;
+	//子节点　解析字符串,执行之后，child->type=cjson_string;child->valuestring="name" ,parse_string的返回值=":\"zhao\",\"age\":18" 是剩下的字符串
 	value=skip(parse_string(child,skip(value)));
 	if (!value) return 0;
-	child->string=child->valuestring;child->valuestring=0;
+	// child->string 在这里想表达的是json里面的key
+	child->string=child->valuestring;
+	child->valuestring=0;
 	if (*value!=':') {ep=value;return 0;}	/* fail! */
+	// 继续解析字符串里面的value的部分
 	value=skip(parse_value(child,skip(value+1)));	/* skip any spacing, get the value. */
+
 	if (!value) return 0;
 	
 	while (*value==',')
 	{
 		cJSON *new_item;
 		if (!(new_item=cJSON_New_Item()))	return 0; /* memory fail */
-		child->next=new_item;new_item->prev=child;child=new_item;
+		child->next=new_item;
+		new_item->prev=child;
+		child=new_item;
+		
 		value=skip(parse_string(child,skip(value+1)));
 		if (!value) return 0;
-		child->string=child->valuestring;child->valuestring=0;
+		child->string=child->valuestring;
+		child->valuestring=0;
 		if (*value!=':') {ep=value;return 0;}	/* fail! */
 		value=skip(parse_value(child,skip(value+1)));	/* skip any spacing, get the value. */
 		if (!value) return 0;
