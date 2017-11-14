@@ -27,4 +27,18 @@ rebuild_myxxx    #这个表示自己重写的项目
 
 4. stl
 
+    stl有点看不动，进度简直，，c++的知识已经忘光。。。呜呜呜~~~~
+    
+    把找到的一些好的资料贴在这里，下次在启动的时候，会方便一点：
+
+    侯捷《stl源码剖析》
+    然后，就是博客上面的两位大神的解析：
+
+    大神1 ： https://zcheng.ren/
+    
+    大神2 ： http://www.cnblogs.com/lfsblack/archive/2012/11/10/2764334.html
+
+
+
+
 5. libevent
