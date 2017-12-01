@@ -79,6 +79,7 @@ def parse_object(item,value):
 
     value=skip(parse_string(child,skip(value)))
     child.string=child.valuestring
+    child.valuestring=None
 
     #这里可能的情况是 {"name":"zhao"}
     #parse_string 函数，提取走了引号里面的值，即name，返回之后的value是 :"zhao"}
@@ -95,16 +96,16 @@ def parse_object(item,value):
         child.next=new_item
         new_item.prev=child
         child=new_item
-
+        #这里的value[1:]表示的是去掉前面的逗号，
         value=skip(parse_string(child,skip(value[1:])))
         if (len(value)==0):
             return 0
         child.string=child.valuestring
-        child.valuestring=0
+        child.valuestring=None
 
         if(value[0]==':'):
             value=value[1:]
-        value=skip(parse_value(child,skip(value[1:])))
+        value=skip(parse_value(child,skip(value)))
         if (len(value)==0):
             return 0
 
@@ -129,11 +130,11 @@ def parse_value(c,value):
         print ("other")
 
 
-def pretty_print(c):
+def print_object(c):
     currnet=c
     if(currnet.type=="cJSON_Object"):
-        print ("{")
-        pretty_print(currnet.child)
+        print (' "{}": '.format(currnet.string)," {")
+        print_object(currnet.child)
         print ("}")
     if(currnet.type=="cJSON_String"):
         print (' "{}":"{}"'.format(currnet.string,currnet.valuestring))
@@ -144,6 +145,37 @@ def pretty_print(c):
                 print (' "{}":"{}"'.format(currnet.string,currnet.valuestring))
             if(currnet.type=="cJSON_Number"):
                 print (' "{}":{}'.format(currnet.string,currnet.valuedouble))
+            if(currnet.type=="cJSON_Object"):
+                print (' "{}": '.format(currnet.string)," {")
+                print_object(currnet.child)
+                print ("}")
+    if(currnet.type=="cJSON_Number"):
+        print (' "{}":"{}"'.format(currnet.string,currnet.valuedouble))
+        while(currnet.next!=None):
+            currnet=currnet.next
+            print (",")
+            if(currnet.type=="cJSON_String"):
+                print (' "{}":"{}"'.format(currnet.string,currnet.valuestring))
+            if(currnet.type=="cJSON_Number"):
+                print (' "{}":{}'.format(currnet.string,currnet.valuedouble))
+            if(currnet.type=="cJSON_Object"):
+                print (' "{}": '.format(currnet.string)," {")
+                print_object(currnet.child)
+                print ("}")
+
+
+
+
+
+def pretty_print(c):
+    if(c.type=="cJSON_Object"):
+        print("{")
+        print_object(c.child)
+        print("}")
+    if(c.type=="cJSON_String"):
+        pass
+    if(c.type=="cJSON_Number"):
+        pass
 
 
 
@@ -160,6 +192,8 @@ def cJSON_ParseWithOpts(value):
 
 
 if __name__=="__main__":
-    text='{"name":"zhao","edu":{"benke":"ujs","shuoshi":"tju"}}'
+    #text='{"name":"zhao","edu":{"benke":"ujs","shuoshi":"tju"}}'
     #text="-123.45,{name:zhao}"
+    #text='{"name":{"age":18}}'
+    text='{"menu":{"id":"file","value":"File","age":{"benke":"ujs","shuoshi":"tju"}}}'
     cJSON_ParseWithOpts(text)
