@@ -1,8 +1,9 @@
 import socket 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(('www.sina.com.cn', 80))
-s.send(b'GET / HTTP/1.1\r\nHost: www.sina.com.cn\r\nConnection: close\r\n\r\n')
+url ='www.liaoxuefeng.com'
+s.connect((url, 80))
+s.send(b'GET /wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000 HTTP/1.1\r\nHost: www.liaoxuefeng.com\r\nConnection: close\r\n\r\n')
 
 
 buffer = []

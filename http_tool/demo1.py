@@ -6,7 +6,7 @@ def parse_response(data):
     #print (data.decode('utf-8'))
     header, html = data.split(b'\r\n\r\n', 1)
     print (header.decode('utf-8'))
-    print (html.decode('utf-8'))
+    #print (html.decode('utf-8'))
 
 def show_request(head,request_lines):
     print (">> 发送的http请求 >>")
@@ -20,7 +20,7 @@ def build_http_request(host,path,isshow=True):
     request_lines = []
     request_lines.append('Host: {host}\r\n'.format(host = host))
     request_lines.append('User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36\r\n')
-    request_lines.append('Connection:keep-alive\r\n')
+    request_lines.append('Connection:close\r\n')
     request_lines.append('Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\r\n')
     request_lines.append('Accept-Language: zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7\r\n\r\n')   # 注意 请求结束的时候，这里有两个\r\n
     if isshow == True:
@@ -47,8 +47,9 @@ if __name__ =="__main__":
     #url ='https://github.com/zhaozhengcoder/Machine-Learning'
     url2 ='https://www.sina.com.cn/'
     url3 ='https://www.liaoxuefeng.com/'
+    url4 ='http://hello.tongji.edu.cn/'  #现在还不支持https的协议，所以如果一个https的协议的话，就会location 重定向
 
-    method,host,path = parse_url(url3)
+    method,host,path = parse_url(url4)
     http_request = build_http_request(host,path)
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
