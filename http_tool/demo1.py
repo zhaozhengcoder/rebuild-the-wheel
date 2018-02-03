@@ -69,4 +69,12 @@ if __name__ =="__main__":
     parse_response(data)
 
 
+"""
+
+这个版本的问题是：
+1. 不支持https的请求 ，因为使用了socket.connect 的函数，太底层了，是不是用request 库很好一点？
+2. parse_response 函数解析html的时候，如果这个页面里面有中文，就可能出bug，原因应该是中文编码造成的，但是没想好怎么解决
+3. 看看curl的是实现，能不能找到一些灵感
+
+"""
 
