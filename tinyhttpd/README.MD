@@ -3,6 +3,12 @@
 tinyhttp是一个简单的web服务器，实现了web服务器的基本原理。代码全部使用C语言开发，阅读代码，可以了解web服务器的基本原理。
 
 
+tinyhttp是用c写的，相比较用python或则是其他高级语言实现的http server，c语言可以更加从底层的让读者明白一个浏览器的请求是如何被server相应，然后server是如何response。大概用一天的时间读完，真的是把我爽到了，强烈推荐！！！
+
+<br/>
+
+***
+
 ### 目录结构
     1. tinyhttpd_src 文件夹里面是源码
 
