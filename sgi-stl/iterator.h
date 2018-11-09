@@ -36,6 +36,7 @@
 #include <iosfwd>
 #else /* __STL_USE_NEW_IOSTREAMS */
 #include <iostream.h>
+//#include <iostream>
 #endif /* __STL_USE_NEW_IOSTREAMS */
 
 #ifndef __SGI_STL_INTERNAL_ITERATOR_BASE_H

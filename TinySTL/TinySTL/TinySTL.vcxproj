@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8B728502-8B31-4983-B9C3-13D8CCA52181}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>TinySTL</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\zxh\Desktop\boost_1_56_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\zxh\Desktop\boost_1_56_0\libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Users\zxh\Desktop\boost_1_56_0;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <StackReserveSize>0x10000000</StackReserveSize>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Detail\Alloc.cpp" />
+    <ClCompile Include="Detail\String.cpp" />
+    <ClCompile Include="Detail\TrieTree.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Profiler\Profiler.cpp" />
+    <ClCompile Include="Test\AlgorithmTest.cpp" />
+    <ClCompile Include="Test\AVLTreeTest.cpp" />
+    <ClCompile Include="Test\BinarySearchTreeTest.cpp" />
+    <ClCompile Include="Test\BitmapTest.cpp" />
+    <ClCompile Include="Test\CircularBufferTest.cpp" />
+    <ClCompile Include="Test\COWPtrTest.cpp" />
+    <ClCompile Include="Test\DequeTest.cpp" />
+    <ClCompile Include="Test\GraphTest.cpp" />
+    <ClCompile Include="Test\ListTest.cpp" />
+    <ClCompile Include="Test\PairTest.cpp" />
+    <ClCompile Include="Test\PriorityQueueTest.cpp" />
+    <ClCompile Include="Test\QueueTest.cpp" />
+    <ClCompile Include="Test\RefTest.cpp" />
+    <ClCompile Include="Test\SharedPtrTest.cpp" />
+    <ClCompile Include="Test\StackTest.cpp" />
+    <ClCompile Include="Test\StringTest.cpp" />
+    <ClCompile Include="Test\SuffixArrayTest.cpp" />
+    <ClCompile Include="Test\TrieTreeTest.cpp" />
+    <ClCompile Include="Test\TypeTraitsTest.cpp" />
+    <ClCompile Include="Test\UFSetTest.cpp" />
+    <ClCompile Include="Test\UniquePtrTest.cpp" />
+    <ClCompile Include="Test\Unordered_setTest.cpp" />
+    <ClCompile Include="Test\VectorTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Algorithm.h" />
+    <ClInclude Include="Alloc.h" />
+    <ClInclude Include="Allocator.h" />
+    <ClInclude Include="AVLTree.h" />
+    <ClInclude Include="BinarySearchTree.h" />
+    <ClInclude Include="Bitmap.h" />
+    <ClInclude Include="CircularBuffer.h" />
+    <ClInclude Include="Construct.h" />
+    <ClInclude Include="COWPtr.h" />
+    <ClInclude Include="Deque.h" />
+    <ClInclude Include="Detail\AVLTree.impl.h" />
+    <ClInclude Include="Detail\BinarySearchTree.impl.h" />
+    <ClInclude Include="Detail\Bitmap.impl.h" />
+    <ClInclude Include="Detail\CircularBuffer.impl.h" />
+    <ClInclude Include="Detail\COWPtr.impl.h" />
+    <ClInclude Include="Detail\Deque.impl.h" />
+    <ClInclude Include="Detail\Graph.impl.h" />
+    <ClInclude Include="Detail\List.impl.h" />
+    <ClInclude Include="Detail\Ref.h" />
+    <ClInclude Include="Detail\Unordered_set.impl.h" />
+    <ClInclude Include="Detail\Vector.impl.h" />
+    <ClInclude Include="Functional.h" />
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="Iterator.h" />
+    <ClInclude Include="List.h" />
+    <ClInclude Include="Memory.h" />
+    <ClInclude Include="Profiler\Profiler.h" />
+    <ClInclude Include="Queue.h" />
+    <ClInclude Include="ReverseIterator.h" />
+    <ClInclude Include="Stack.h" />
+    <ClInclude Include="String.h" />
+    <ClInclude Include="SuffixArray.h" />
+    <ClInclude Include="Test\AlgorithmTest.h" />
+    <ClInclude Include="Test\AVLTreeTest.h" />
+    <ClInclude Include="Test\BinarySearchTreeTest.h" />
+    <ClInclude Include="Test\BitmapTest.h" />
+    <ClInclude Include="Test\CircularBufferTest.h" />
+    <ClInclude Include="Test\COWPtrTest.h" />
+    <ClInclude Include="Test\DequeTest.h" />
+    <ClInclude Include="Test\GraphTest.h" />
+    <ClInclude Include="Test\ListTest.h" />
+    <ClInclude Include="Test\PairTest.h" />
+    <ClInclude Include="Test\PriorityQueueTest.h" />
+    <ClInclude Include="Test\QueueTest.h" />
+    <ClInclude Include="Test\RefTest.h" />
+    <ClInclude Include="Test\SharedPtrTest.h" />
+    <ClInclude Include="Test\StackTest.h" />
+    <ClInclude Include="Test\StringTest.h" />
+    <ClInclude Include="Test\SuffixArrayTest.h" />
+    <ClInclude Include="Test\TestUtil.h" />
+    <ClInclude Include="Test\TrieTreeTest.h" />
+    <ClInclude Include="Test\TypeTraitsTest.h" />
+    <ClInclude Include="Test\UFSetTest.h" />
+    <ClInclude Include="Test\UniquePtrTest.h" />
+    <ClInclude Include="Test\Unordered_setTest.h" />
+    <ClInclude Include="Test\VectorTest.h" />
+    <ClInclude Include="TrieTree.h" />
+    <ClInclude Include="TypeTraits.h" />
+    <ClInclude Include="UFSet.h" />
+    <ClInclude Include="UninitializedFunctions.h" />
+    <ClInclude Include="Unordered_set.h" />
+    <ClInclude Include="Utility.h" />
+    <ClInclude Include="Vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="ScreenShots\graph1.png" />
+    <Image Include="ScreenShots\graph2.png" />
+    <Image Include="ScreenShots\graph_bfs.png" />
+    <Image Include="ScreenShots\graph_dfs.png" />
+    <Image Include="ScreenShots\suffix_array.png" />
+    <Image Include="ScreenShots\trie_tree.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TestData\string_test.txt" />
+    <Text Include="TestData\trie_tree_test.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
