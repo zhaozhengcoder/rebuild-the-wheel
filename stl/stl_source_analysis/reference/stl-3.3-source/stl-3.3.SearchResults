@@ -1,0 +1,19 @@
+---- pop_heap Matches (18 in 5 files) ----
+Algo.h:using __STD::pop_heap;
+Heap.h:using __STD::pop_heap;
+Stl_algo.h:      __pop_heap(__first, __middle, __i, _Tp(*__i),
+Stl_algo.h:      __pop_heap(__first, __middle, __i, _Tp(*__i), __comp,
+Stl_heap.h:// Heap-manipulation functions: push_heap, pop_heap, make_heap, sort_heap.
+Stl_heap.h:__pop_heap(_RandomAccessIterator __first, _RandomAccessIterator __last,
+Stl_heap.h:__pop_heap_aux(_RandomAccessIterator __first, _RandomAccessIterator __last,
+Stl_heap.h:  __pop_heap(__first, __last - 1, __last - 1, 
+Stl_heap.h:inline void pop_heap(_RandomAccessIterator __first, 
+Stl_heap.h:  __pop_heap_aux(__first, __last, __VALUE_TYPE(__first));
+Stl_heap.h:__pop_heap(_RandomAccessIterator __first, _RandomAccessIterator __last,
+Stl_heap.h:__pop_heap_aux(_RandomAccessIterator __first,
+Stl_heap.h:  __pop_heap(__first, __last - 1, __last - 1, _Tp(*(__last - 1)), __comp,
+Stl_heap.h:pop_heap(_RandomAccessIterator __first,
+Stl_heap.h:  __pop_heap_aux(__first, __last, __VALUE_TYPE(__first), __comp);
+Stl_heap.h:    pop_heap(__first, __last--);
+Stl_heap.h:    pop_heap(__first, __last--, __comp);
+Stl_queue.h:      pop_heap(c.begin(), c.end(), comp);
