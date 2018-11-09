@@ -34,27 +34,27 @@
 
     这就需要设计一个合理的数据结构来干这个事情了，想想都是一个很激动的事情。
 
+### 3. muduo 
+
+    一个非常优秀的c++网络库，很值得学习。
+
+    https://github.com/zhaozhengcoder/muduo
+
+
+
 ### To-Do：
 
 ### 1. stl
 
-    stl有点看不动，进度简直，，c++的知识已经忘光。。。呜呜呜~~~~
-    
-    把找到的一些好的资料贴在这里，下次在启动的时候，会方便一点：
+    sgi-stl
 
     侯捷《stl源码剖析》
-    然后，就是博客上面的两位大神的解析：
 
-    大神1 ： https://zcheng.ren/
+    参考1 ： https://zcheng.ren/
     
-    大神2 ： http://www.cnblogs.com/lfsblack/archive/2012/11/10/2764334.html
+    参考2 ： http://www.cnblogs.com/lfsblack/archive/2012/11/10/2764334.html
 
 
 ### 2. libevent
 
 
-### 3. muduo 
-
-    看这本书收获非常大，目前还再学习中。
-
-    https://github.com/zhaozhengcoder/muduo

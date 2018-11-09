@@ -1,0 +1,10 @@
+*.[ao]
+*~
+*#
+*swp
+*out
+/comment
+/tags
+cscope.files
+.cproject
+.project
