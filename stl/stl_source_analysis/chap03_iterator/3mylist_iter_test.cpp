@@ -38,7 +38,7 @@ int main()
     {}
 
     int key = 3;
-    iter = myfind(begin, end, key);
+    iter = myfind(begin, end, 3);
     if (iter == end)
     {
         cout << "not found" << endl;
@@ -48,14 +48,27 @@ int main()
         cout << "found." << iter->value() << endl;
     }
 
-    iter = myfind(begin, end, 7);
-    if (iter == end)
+    List<char> mylist2;
+    for(int i=0;i<10;i++)
+    {
+        char c = 'a';
+        mylist2.insert_front((c+i));
+    }
+
+    mylist2.display();
+    ListIter<ListItem<char> > begin2(mylist2.front());
+    ListIter<ListItem<char> > end2(mylist2.end());
+    ListIter<ListItem<char> > iter2; 
+
+    iter2 = myfind(begin2, end2, 'c');
+    if (iter2 == end2)
     {
         cout << "not found" << endl;
     }
     else
     {
-        cout << "found." << iter->value() << endl;   
-    }
+        cout << "found." << iter2->value() << endl;
+    }    
+
     return 0;
 }
