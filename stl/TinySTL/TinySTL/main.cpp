@@ -30,28 +30,28 @@
 using namespace TinySTL::Profiler;
 
 int main(){
-	TinySTL::AlgorithmTest::testAllCases();
-	TinySTL::AVLTreeTest::testAllCases();
-	TinySTL::BitmapTest::testAllCases();
-	TinySTL::BinarySearchTreeTest::testAllCases();
-	TinySTL::CircularBufferTest::testAllCases();
-	TinySTL::COWPtrTest::testAllCases();
-	TinySTL::DequeTest::testAllCases();
-	TinySTL::ListTest::testAllCases();
-	TinySTL::GraphTest::testAllCases();
-	TinySTL::PairTest::testAllCases();
-	TinySTL::PriorityQueueTest::testAllCases();
-	TinySTL::QueueTest::testAllCases();
-	TinySTL::RefTest::testAllCases();
-	TinySTL::SharedPtrTest::testAllCases();
-	TinySTL::StackTest::testAllCases();
-	TinySTL::StringTest::testAllCases();
-	TinySTL::SuffixArrayTest::testAllCases();
-	TinySTL::TrieTreeTest::testAllCases();
-	TinySTL::TypeTraitsTest::testAllCases();
-	TinySTL::UFSetTest::testAllCases();
-	TinySTL::UniquePtrTest::testAllCases();
-	TinySTL::Unordered_setTest::testAllCases();
+	//TinySTL::AlgorithmTest::testAllCases();
+	//TinySTL::AVLTreeTest::testAllCases();
+	//TinySTL::BitmapTest::testAllCases();
+	//TinySTL::BinarySearchTreeTest::testAllCases();
+	//TinySTL::CircularBufferTest::testAllCases();
+	//TinySTL::COWPtrTest::testAllCases();
+	//TinySTL::DequeTest::testAllCases();
+	//TinySTL::ListTest::testAllCases();
+	//TinySTL::GraphTest::testAllCases();
+	//TinySTL::PairTest::testAllCases();
+	//TinySTL::PriorityQueueTest::testAllCases();
+	//TinySTL::QueueTest::testAllCases();
+	//TinySTL::RefTest::testAllCases();
+	//TinySTL::SharedPtrTest::testAllCases();
+	//TinySTL::StackTest::testAllCases();
+	//TinySTL::StringTest::testAllCases();
+	//TinySTL::SuffixArrayTest::testAllCases();
+	//TinySTL::TrieTreeTest::testAllCases();
+	//TinySTL::TypeTraitsTest::testAllCases();
+	//TinySTL::UFSetTest::testAllCases();
+	//TinySTL::UniquePtrTest::testAllCases();
+	//TinySTL::Unordered_setTest::testAllCases();
 	TinySTL::VectorTest::testAllCases();
 	 
 

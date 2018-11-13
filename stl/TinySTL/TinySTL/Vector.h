@@ -20,6 +20,7 @@ namespace TinySTL{
 		T *endOfStorage_;
 
 		typedef Alloc dataAllocator;
+
 	public:
 		typedef T									value_type;
 		typedef T*							iterator;

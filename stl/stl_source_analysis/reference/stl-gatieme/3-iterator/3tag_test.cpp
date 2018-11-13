@@ -1,17 +1,17 @@
 #include <iostream>
 using namespace std;
 
-struct B                ///  B  ¿É±ÈÄâÎªInputIterator
+struct B                ///  B  å¯æ¯”æ‹Ÿä¸ºInputIterator
 {
 
 };
 
-struct D1 : public B   ///  D1 ¿É±ÈÄâÎªForwardIteraor
+struct D1 : public B   ///  D1 å¯æ¯”æ‹Ÿä¸ºForwardIteraor
 {
 
 };
 
-struct D2 : public D1    //  D2 ¿É±ÈÄâÎªBidirectionalIterator
+struct D2 : public D1    //  D2 å¯æ¯”æ‹Ÿä¸ºBidirectionalIterator
 {
 
 };
@@ -35,9 +35,9 @@ func(I &p, D2)
 int main(void)
 {
     int *p;
-    func(p, B());        //  ²ÎÊıBÍêÈ«ÎÇºÏ, Êä³ö"B version..."
-    func(p, D1());       //  ²ÎÊıÎ´ÄÜÍêÈ«ÎÇºÏ, Òò¼Ì³Ğ¹ØÏµµ÷ÓÃ, Êä³ö"B version..."
-    func(p, D2());       //  ²ÎÊıD2ÍêÈ«ÎÇºÏ, Êä³ö"D2 version..."
+    func(p, B());        //  å‚æ•°Bå®Œå…¨å»åˆ, è¾“å‡º"B version..."
+    func(p, D1());       //  å‚æ•°æœªèƒ½å®Œå…¨å»åˆ, å› ç»§æ‰¿å…³ç³»è°ƒç”¨, è¾“å‡º"B version..."
+    func(p, D2());       //  å‚æ•°D2å®Œå…¨å»åˆ, è¾“å‡º"D2 version..."
 
 
 

@@ -18,18 +18,20 @@ namespace TinySTL{
 	private:
 		//free-lists的节点构造
 		union obj{
-			union obj *next;
+			union obj * next;
 			char client[1];
 		};
+		static obj * free_list[ENFreeLists::NFREELISTS];  //free-lists的个数 是16
 
-		static obj *free_list[ENFreeLists::NFREELISTS];
 	private:
-		static char *start_free;//内存池起始位置
-		static char *end_free;//内存池结束位置
-		static size_t heap_size;//
+		static char *start_free;		//内存池起始位置
+		static char *end_free;			//内存池结束位置
+		static size_t heap_size;		//
+	
 	private:
 		//将bytes上调至8的倍数
-		static size_t ROUND_UP(size_t bytes){
+		static size_t ROUND_UP(size_t bytes)
+		{
 			return ((bytes + EAlign::ALIGN - 1) & ~(EAlign::ALIGN - 1));
 		}
 		//根据区块大小，决定使用第n号free-list，n从0开始计算

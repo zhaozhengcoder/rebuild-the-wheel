@@ -5,8 +5,11 @@ using namespace std;
 int main()
 {
     vector<int, JJ::allocator<int> > vi;
-    vi.push_back(1);
-    vi.push_back(2);
+
+    for(int i=0;i<10;i++)
+    {
+        vi.push_back(i);
+    }
 
     for (int i = 0; i < vi.size(); i++)
     {
