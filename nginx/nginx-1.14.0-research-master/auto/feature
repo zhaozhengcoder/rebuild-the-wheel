@@ -1,0 +1,131 @@
+
+# Copyright (C) Igor Sysoev
+# Copyright (C) Nginx, Inc.
+
+
+# 会在控制台先输出checking for
+echo $ngx_n "checking for $ngx_feature ...$ngx_c"
+
+# 在auto_config.err中输出checking for
+cat << END >> $NGX_AUTOCONF_ERR
+
+----------------------------------------
+checking for $ngx_feature
+
+END
+
+ngx_found=no
+
+# 检查变量$ngx_feature_name是否有设置
+if test -n "$ngx_feature_name"; then
+    ngx_have_feature=`echo $ngx_feature_name \
+                   | tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ`
+fi
+
+# 如果设置了ngx_feature_path，就设置ngx_feature_inc_path
+if test -n "$ngx_feature_path"; then
+    for ngx_temp in $ngx_feature_path; do
+        ngx_feature_inc_path="$ngx_feature_inc_path -I $ngx_temp"
+    done
+fi
+
+# 根据$ngx_feature_test生成测试c文件
+cat << END > $NGX_AUTOTEST.c
+
+#include <sys/types.h>
+$NGX_INCLUDE_UNISTD_H
+$ngx_feature_incs
+
+int main(void) {
+    $ngx_feature_test;
+    return 0;
+}
+
+END
+
+# 编译生成的测试c文件
+ngx_test="$CC $CC_TEST_FLAGS $CC_AUX_FLAGS $ngx_feature_inc_path \
+          -o $NGX_AUTOTEST $NGX_AUTOTEST.c $NGX_TEST_LD_OPT $ngx_feature_libs"
+
+ngx_feature_inc_path=
+
+# 执行测试c文件并捕获输出到auto_config.err
+eval "/bin/sh -c \"$ngx_test\" >> $NGX_AUTOCONF_ERR 2>&1"
+
+
+# 如果设置了ngx_feature_run, 就把输出设置为对应的$ngx_feature_name的值
+if [ -x $NGX_AUTOTEST ]; then
+
+    case "$ngx_feature_run" in
+
+        yes)
+            # /bin/sh is used to intercept "Killed" or "Abort trap" messages
+            if /bin/sh -c $NGX_AUTOTEST >> $NGX_AUTOCONF_ERR 2>&1; then
+                echo " found"
+                ngx_found=yes
+
+                if test -n "$ngx_feature_name"; then
+                    have=$ngx_have_feature . auto/have
+                fi
+
+            else
+                echo " found but is not working"
+            fi
+        ;;
+
+        value)
+            # /bin/sh is used to intercept "Killed" or "Abort trap" messages
+            if /bin/sh -c $NGX_AUTOTEST >> $NGX_AUTOCONF_ERR 2>&1; then
+                echo " found"
+                ngx_found=yes
+
+                cat << END >> $NGX_AUTO_CONFIG_H
+
+#ifndef $ngx_feature_name
+#define $ngx_feature_name  `$NGX_AUTOTEST`
+#endif
+
+END
+            else
+                echo " found but is not working"
+            fi
+        ;;
+
+        bug)
+            # /bin/sh is used to intercept "Killed" or "Abort trap" messages
+            if /bin/sh -c $NGX_AUTOTEST >> $NGX_AUTOCONF_ERR 2>&1; then
+                echo " not found"
+
+            else
+                echo " found"
+                ngx_found=yes
+
+                if test -n "$ngx_feature_name"; then
+                    have=$ngx_have_feature . auto/have
+                fi
+            fi
+        ;;
+
+        *)
+            echo " found"
+            ngx_found=yes
+
+            if test -n "$ngx_feature_name"; then
+                have=$ngx_have_feature . auto/have
+            fi
+        ;;
+
+    esac
+# 没有找到的情况，在auto_config.err中体现，并且在控制台显示 not found
+else
+    echo " not found"
+
+    echo "----------"    >> $NGX_AUTOCONF_ERR
+    cat $NGX_AUTOTEST.c  >> $NGX_AUTOCONF_ERR
+    echo "----------"    >> $NGX_AUTOCONF_ERR
+    echo $ngx_test       >> $NGX_AUTOCONF_ERR
+    echo "----------"    >> $NGX_AUTOCONF_ERR
+fi
+
+# 删除测试c文件及编译出来的东西
+rm -rf $NGX_AUTOTEST*

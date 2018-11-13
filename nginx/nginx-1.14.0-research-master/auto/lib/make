@@ -1,0 +1,29 @@
+
+# Copyright (C) Igor Sysoev
+# Copyright (C) Nginx, Inc.
+
+
+if [ $PCRE != NONE -a $PCRE != NO -a $PCRE != YES ]; then
+    # 用C语言编写的正则表达式函数库
+    . auto/lib/pcre/make
+fi
+
+if [ $OPENSSL != NONE -a $OPENSSL != NO -a $OPENSSL != YES ]; then
+    # 安全套接字层密码库
+    . auto/lib/openssl/make
+fi
+
+if [ $ZLIB != NONE -a $ZLIB != NO -a $ZLIB != YES ]; then
+    # 供数据压缩用的函式库
+    . auto/lib/zlib/make
+fi
+
+if [ $NGX_LIBATOMIC != NO -a $NGX_LIBATOMIC != YES ]; then
+    # 多线程原子操作库库
+    . auto/lib/libatomic/make
+fi
+
+if [ $USE_PERL != NO ]; then
+    # perl操作库
+    . auto/lib/perl/make
+fi

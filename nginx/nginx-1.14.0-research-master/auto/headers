@@ -1,0 +1,28 @@
+
+# Copyright (C) Igor Sysoev
+# Copyright (C) Nginx, Inc.
+
+
+# unistd.h是unix std的意思，是POSIX标准定义的unix类系统定义符号常量的头文件
+ngx_include="unistd.h";      . auto/include
+
+# inttypes.h 是C標準函数庫中的头文件，提供了各种位宽的整数类型输入输出时的转换标志宏
+ngx_include="inttypes.h";    . auto/include
+
+# limits.h 是C標準函数庫中的头文件，定义了整数类型的一些极限值
+ngx_include="limits.h";      . auto/include
+
+# unix上的文件io操作头文件，linux上没有这个文件
+ngx_include="sys/filio.h";   . auto/include
+
+# 定义了操作系统的宏文件，BSD系统上必有
+ngx_include="sys/param.h";   . auto/include
+
+# 磁盘挂载的一些定义
+ngx_include="sys/mount.h";   . auto/include
+
+# 文件系统信息
+ngx_include="sys/statvfs.h"; . auto/include
+
+# GNU的加密库
+ngx_include="crypt.h";       . auto/include
